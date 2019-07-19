@@ -3,6 +3,7 @@ In this section, we formally define the problem and some necessary terms for the
 \begin{definition}
 A \textbf{Matching} $M \subseteq E$ in a graph $G(V, E)$ is a subset of pairwise disjoint edges in the graph, meaning the edges of a matching do not overlap in their endpoints and hence no vertex can be incident to more than one edge in a matching.
 \end{definition}
+In a matching, a vertex incident to a matching edge is called \textbf{blocked} vertex in contrast to a \textbf{free} vertex that is not incident to a matching edge.
 
 \begin{definition}
 A \textbf{Maximal Matching} in a graph is a matching that is not a subset of any other matching in the graph, and hence a matching is maximal if and only if it intersects every single edge in the graph.
@@ -18,6 +19,8 @@ A \textbf{Perfect Matching} in a graph of $n$ vertices, where $n$ is a positive 
 \end{definition}
 Note that since each edge is incident to two vertices and no vertex is incident to more that one matching edge, there is no matching of size greater than $\ceil*{ \frac{n}{2}}$ and hence a perfect matching *if it exists* in a graph, is a maximum matching as well.
 
+Note also that all vertices in a perfect matching are blocked vertices.
+
 Perfect matching is not unique as well, and the problem of counting perfect matchings in a graph has also been well studied. We refer to [todo] for a reference.
 
 \begin{definition}
@@ -26,4 +29,6 @@ Perfect matching is not unique as well, and the problem of counting perfect matc
 Note that the subgraph induced by the set $A$ (or $B$) is an indipendent set in a bipartite graph.
 
 Note that all cycles in a bipartite graph must have an even length.
+
+Note that a bipartite graph with $|A| \neq |B|$ can not admit a perfect matching.
 
