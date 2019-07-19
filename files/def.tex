@@ -1,0 +1,29 @@
+In this section, we formally define the problem and some necessary terms for the solution.
+
+\begin{definition}
+A \textbf{Matching} $M \subseteq E$ in a graph $G(V, E)$ is a subset of pairwise disjoint edges in the graph, meaning the edges of a matching do not overlap in their endpoints and hence no vertex can be incident to more than one edge in a matching.
+\end{definition}
+
+\begin{definition}
+A \textbf{Maximal Matching} in a graph is a matching that is not a subset of any other matching in the graph, and hence a matching is maximal if and only if it intersects every single edge in the graph.
+\end{definition}
+
+\begin{definition}
+A \textbf{Maximum Matching} in a graph, is a matching of the maximum cardinality in the graph. Hence any maximum matching is a maximal matching but the implication is not necessarily true in the other direction.
+\end{definition}.
+Note that maximum matching might not be unique in a graph. However, in this report, we will study the problem of finding any maximum matching for a given graph.
+
+\begin{definition}
+A \textbf{Perfect Matching} in a graph of $n$ vertices, where $n$ is a positive even integer, is a matching of size $n/2$.
+\end{definition}
+Note that since each edge is incident to two vertices and no vertex is incident to more that one matching edge, there is no matching of size greater than $\ceil*{ \frac{n}{2}}$ and hence a perfect matching *if it exists* in a graph, is a maximum matching as well.
+
+Perfect matching is not unique as well, and the problem of counting perfect matchings in a graph has also been well studied. We refer to [todo] for a reference.
+
+\begin{definition}
+	A Bipartite graph $G(A,B,E)$ is a graph defined on the set of vertices $A \cup B$ where $A$ and $B$ are disjoint and all edges in the graph have one endpoint in $A$ and the other in $B$, i.e. $E \subseteq A \times B$.
+\end{definition}
+Note that the subgraph induced by the set $A$ (or $B$) is an indipendent set in a bipartite graph.
+
+Note that all cycles in a bipartite graph must have an even length.
+
