@@ -1,10 +1,10 @@
-Maximum matching is a well studied optimization problem on graphs in the theory of computer science. It was first introduced through assignment problem, wich is given a set of $A$ of workers and $B$ of machines of the same size and a function $f:A\times B \rightarrow \mathbb{R}^{+}$ that assigns a value of efficiency for each worker on each machine, the problem seeks an injective assignment of workers to machines such that the total efficiency is maximized.
+Maximum matching is a well studied optimization problem on graphs in the theory of computer science. It was first introduced through assignment problem, which is given a set of $A$ of workers and $B$ of machines of the same size and a function $f:A\times B \rightarrow \mathbb{R}^{+}$ that assigns a value of efficiency for each worker on each machine, the problem seeks an injective assignment of workers to machines such that the total efficiency is maximized.
 
-In this report, we descirbe, in short, the main ideas of the problem and its most efficient algorithms as presented in the seminar "Efficient Algorithms and Data Structures, SS19, HU-Berlin".
+In this report, we describe, in short, the main ideas of the problem and its most efficient algorithms as presented in the seminar "Efficient Algorithms and Data Structures, SS19, HU-Berlin".
 
 The problem has many different variations. Intuitively, in a given a graph, the goal is to pack pairs of adjacent vertices. In the weighted version of the problem we assign a weight function to each edge and try to find a packing with maximum weight. In this report we are only interested in the unweighted part, where we try to maximize the number of pairs in the packing.
 
 \subsection{Notation}
-We notate $\Delta$  to the semmytric difference of two sets, meaning for two sets $A, B$ over the same universe we define $A\Delta B := \left( A \setminus B \right) \cup \left( B \setminus A \right)$.
+We notate $\Delta$  to the symmetric difference of two sets, meaning for two sets $A, B$ over the same universe we define $A\Delta B := \left( A \setminus B \right) \cup \left( B \setminus A \right)$.
 
-Some section-spcific notations will be defined later in the corresponding sections.
+Some section-specific notations will be defined later in the corresponding sections.
