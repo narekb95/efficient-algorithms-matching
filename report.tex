@@ -1,4 +1,4 @@
-\documentclass[12pt]{extarticle}
+\documentclass[12pt, oribibl]{extarticle}
 %Some packages I commonly use.
 \usepackage[english]{babel}
 \usepackage{graphicx}
@@ -14,6 +14,17 @@
 
 \usepackage{mathtools}
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+
+%% Zitate
+\usepackage[numbers]{natbib}
+\bibliographystyle{abbrvnat}
+%\bibliographystyle{dinat}
+%\bibliographystyle{plainnat}
+%\bibliographystyle{splncs}
+%% Similar to option "sectionbib" but \refname instead of \bibname
+\makeatletter
+\renewcommand\bibsection{\section*{\refname\@mkboth{\MakeUppercase{\refname}}{\MakeUppercase{\refname}}}}
+\makeatother
 
 
 %A bunch of definitions that make my life easier
@@ -43,6 +54,9 @@
 \input{files/gen.tex}
 \section{Randomized Perfect Matching Algorithm}
 \input{files/rand.tex}
+
+\bibliography{bibliography}
+
 
 
 
