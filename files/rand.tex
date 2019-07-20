@@ -2,11 +2,11 @@ In this section, we describe a randomized algorithm, that efficiently checks if 
 
 Using some exponential search algorithm, we can efficiently use an algorithm for the decision version of a problem to solve the original one and hence we get an efficient randomized algorithm for maximum matching in general graphs.
 
-Actually we will only presesnt the bipartite case in this section. Using some tricks to deal with odd cycles (skew symmettric matrices) the solution can be extended to the general case.
+Actually we will only present the bipartite case in this section. Using some tricks to deal with odd cycles (skew symmetric matrices) the solution can be extended to the general case.
 
 We start by recalling some basics from linear algebra and mathematics.
 \begin{definition}
-A function $f:A \mapsto B$ is a \textbf{Bijection}, iff for any elemnts $b \in B$ there is exactly one elements $a \in A$ such that $a \mapsto b$.
+A function $f:A \mapsto B$ is a \textbf{Bijection}, iff for any elements $b \in B$ there is exactly one elements $a \in A$ such that $a \mapsto b$.
 \end{definition}
 Note that $A$ and $B$ must be of the same cardinality in order to define a bijection between them.
 
@@ -15,10 +15,10 @@ Note that $A$ and $B$ must be of the same cardinality in order to define a bijec
 \end{definition}
 We denote the set of all permutations over a set $S$ by $\mathcal{S}_S$.
 
-We denote the set of all permutaitions over the set $[n]$ for $n \in \mathbb{N}$ by $\mathcal{S}_n$.
+We denote the set of all permutations over the set $[n]$ for $n \in \mathbb{N}$ by $\mathcal{S}_n$.
 
 \begin{definition}
-	For a given bipartite graph $G(A, B, E)$ where $|A| = |B| = n \in \mathbb{N}$, let $a_1, \dots, a_n$ be some enumeration for the vertices in $A$. Similarily, let $b_1, \dots, b_n$ be an enumeration for the vertices in $B$.
+	For a given bipartite graph $G(A, B, E)$ where $|A| = |B| = n \in \mathbb{N}$, let $a_1, \dots, a_n$ be some enumeration for the vertices in $A$. Similarly, let $b_1, \dots, b_n$ be an enumeration for the vertices in $B$.
 	
 	We define the \textbf{Bipartite Matrix} $A_G$ of the graph $G$ as $A_G := \left\{a_{i, j}\right\}_{n \times n}$, where 
 	\begin{equation*}
@@ -52,7 +52,7 @@ On the other hand we define a permanent of a matrix as follow
 	perm(A) = \sum\limits_{\pi \in \mathcal{S}_n} \left( \prod\limits_{i \in [n]} a_{i, \pi(i)}  \right)
 \]
 
-Eventhough permanent and determinent are very semilar in their definitions, determinant of a matrix can be found in polynomial time [todo] using Gaus elimination method meanwhile finding the permanent of a matrix is a hard problem [todo].
+Even though permanent and determinant are very similar in their definitions, determinant of a matrix can be found in polynomial time [todo] using Gauss elimination method meanwhile finding the permanent of a matrix is a hard problem [todo].
 
 Now we begin with the main part of the section. Let $G(A, B, E)$ be a given graph. Let $a_1, \dots, a_n$ be an arbitrary enumeration of elements in $A$ and $b_1, \dots, b_n$ an arbitrary enumeration of elements in $B$. In addition, let $A_G$ be the bipartite matrix of $G$ according to the previous enumerations. 
 
@@ -66,18 +66,18 @@ Formally speaking, we are looking for a permutation $\pi$ such that
 \]
 Let us call such a permutation \textbf{good}.
 
-However, since any such product is either one or zero, we can write the prvious condition as
+However, since any such product is either one or zero, we can write the previous condition as
 \[
 	\sum\limits_{\pi \in \mathcal{S}_n}\left( \prod\limits_{i \in [n]} a_{i, \pi(i)}\right) \neq 0
 \]
 
 Now comparing this formula to the  formula of permanent, it is clear that a graph admits a perfect matching if and only if the permanent of its bipartite graph is non zero.
 
-Note that this formula computes a stronger results. It is equal to the number of perfect matchings in a graph. However, as satated above, finding a permanent of a matrix is a hard problem and hence not probably computable in polynomial time.
+Note that this formula computes a stronger results. It is equal to the number of perfect matchings in a graph. However, as stated above, finding a permanent of a matrix is a hard problem and hence not probably computable in polynomial time.
 
 We might try to use the determinant of a matrix instead. However, it might occur that we have exactly as many good permutations with positive $sign$ as good permutations with negative $sign$ which will cancel out in the previous formula.
 
-In order to overcome this problem, we first note that we do not have to restrict our selves to the value one in the bipartite matrix. Since we are only interester in non-zero products, we can turn the ones into any non-zero real value and good permutation will still have non zero product while not good ones will have product zero.
+In order to overcome this problem, we first note that we do not have to restrict our selves to the value one in the bipartite matrix. Since we are only interested in non-zero products, we can turn the ones into any non-zero real value and good permutation will still have non zero product while not good ones will have product zero.
 
 More interestingly, we can use variables instead of values, defining the matrix $A'_G = \{a'_{i,j}\}_{n\times n}$ for a graph $G(A, B, E)$, where
 	\begin{equation*}
@@ -94,12 +94,12 @@ More interestingly, we can use variables instead of values, defining the matrix 
 		A bipartite graph $G(V, E)$ admits a perfect matching if and only if the determinant of the matrix $A'_G$ is not the identical zero.
 	\end{lemma}
 	\begin{proof}
-		$\implies$: Let $\pi$ be the good permutation defining this perfect matching as defined above, i.e. $\pi(i) = j$ for $a_i$ matched to $b_j$. We substitue $1$ to each $x_{i, \pi(i)}$ and zeroes else where. This permutation will have the only non-zero product and hence the determinant will be either one or minus one according to the sign of the permutation. Since there is a values assignment for which the determinant is non-zero, it can not be identical zero.
+		$\implies$: Let $\pi$ be the good permutation defining this perfect matching as defined above, i.e. $\pi(i) = j$ for $a_i$ matched to $b_j$. We substitute $1$ to each $x_{i, \pi(i)}$ and zeroes else where. This permutation will have the only non-zero product and hence the determinant will be either one or minus one according to the sign of the permutation. Since there is a values assignment for which the determinant is non-zero, it can not be identical zero.
 
 		$\impliedby$: if the determinant is not identical zero, there is a value assignment for $x_{i, j}$, such that the determinant is not zero. Let us fix such an assignment. Now since the determinant is not zero, it can not be the case that all permutations are bad and the existence of a good permutation implies the existence of a perfect matching in the graph. 
 	\end{proof}
 
-	Now we turned the problem of checking if a bipartite admits a perfect matching into the problem of finding if a polynomial is identical zero or not. The problem here is that we cannot write this polynomial explicitly since it will require us to apply the formula above and dealing with exponentially many factors. Hence, we will be using the determinant as a blackbox, where we substitue values to the variables and then compute the determinant in polynomial times. This reminds us of \textbf{Schwartz Zippel} lemma.
+	Now we turned the problem of checking if a bipartite admits a perfect matching into the problem of finding if a polynomial is identical zero or not. The problem here is that we cannot write this polynomial explicitly since it will require us to apply the formula above and dealing with exponentially many factors. Hence, we will be using the determinant as a black box, where we substitute values to the variables and then compute the determinant in polynomial times. This reminds us of \textbf{Schwartz Zippel} lemma.
 
 
 	\begin{lemma}
@@ -111,10 +111,10 @@ More interestingly, we can use variables instead of values, defining the matrix 
 	\end{lemma}
 	The lemma can easily be proven by showing that $S$ can not have more than $d |S|^{n-1}$ zeros by induction over $n$. However, we omit the proof here and refer to the original proof [todo].
 
-	Now using the prvious lemma, we know the determinant has degree at most $n$, and hence choosing $F$ to be $\{0, 1\}$ and setting building the set $S$ of size $2d$ arbitrarily. We choose some random substition from $x$. If the determinant is non-zero, we already know for sure that the graph admits a perfect matching. If the determinant is zero we know with probability one half that the graph admits no matching.
+	Now using the previous lemma, we know the determinant has degree at most $n$, and hence choosing $F$ to be $\{0, 1\}$ and setting building the set $S$ of size $2d$ arbitrarily. We choose some random substition from $x$. If the determinant is non-zero, we already know for sure that the graph admits a perfect matching. If the determinant is zero we know with probability one half that the graph admits no matching.
 
-	Repeating the previous algorithm $t$ times and getting zeros every time yields that the graph admits no perfect mtaching with probability at least $1 - (\frac{1}{2})^t$ and hence for $d(n)$ the time needed to compute determinant of an $n$ by $n$ matrix, with $5 \log n$ reptitions we get an algorithm running in $O(d(n) \log n)$ that either outputs no if the graph admits no perfect matching or with probability at least $1 - frac{1}{n^5}$ answers yes if it admits one.
+	Repeating the previous algorithm $t$ times and getting zeros every time yields that the graph admits no perfect matching with probability at least $1 - (\frac{1}{2})^t$ and hence for $d(n)$ the time needed to compute determinant of an $n$ by $n$ matrix, with $5 \log n$ repetitions we get an algorithm running in $O(d(n) \log n)$ that either outputs no if the graph admits no perfect matching or with probability at least $1 - frac{1}{n^5}$ answers yes if it admits one.
 
-	Now [todo] show that in time $O(n^\omega)$ we can compute the detrminant of a matrix where $\omega$ is the matrix multiplication exponent (the time needed the multiply two matrices) and the best known upper bound is around 2.3.
+	Now [todo] show that in time $O(n^\omega)$ we can compute the determinant of a matrix where $\omega$ is the matrix multiplication exponent (the time needed the multiply two matrices) and the best known upper bound is around 2.3.
 
 	Hence we have proved an $O(n^{\omega} \log(n))$ randomized algorithm to check if a given graph admits a perfect matching which is better than the best known $O(n^{5/2})$ deterministic algorithm by Micali and Vazirani.
