@@ -1,117 +1,185 @@
-In this section, we describe a bipartite matching through several formal definitions and at the end an algorithm, that efficiently checks a bipartite graph for the best possible matching. We will begin with some important formal definitions first, which we will use later on in our algorithms:
+In this section we will focus on bipartite graphs, going through some basic defintions and lemmas and describing efficient algorithms to find a maximum matching in a bipartite graph.
+\begin{definition}
+	A \textbf{Vertex Cover} in a graph $G(V, E)$, is a set of vertices $S \subseteq V$, such that any edge in the graph is incident to at least one vertex in the set.
+\end{definition}
+Minimum Vertex Cover is a well known optimization problem and it is known to be an np-hard problem. [todo][ref]
+
+It is easy to see that the size of vertex cover is an aupper bound to the size of maximum matching since each edge in the matching must have an endpoint in the cover and the edges do not intersect in their endpoints. However, a very basic theorem from Koenig[todo][ref] states that both numbers are equal in bipartite graphs. The proof is constructive that given a maximum matching in a bipartite graph we can build  a vertex cover of the same size. We omit the proof since it is technical and refer to the paper for further reading.
+
+\begin{theorem}Koenigs Theorem
+
+	The size of the minimum vertex cover in a graph is equal to the size of maximum matching in the graph.
+\end{theorem}
+
+In addition, Hall's theorem is another very basic theorem in bipartite graph. It describes a certificate for a graph not admitting a perfect matching and it is very essential from the algorithmic point of view.
+\begin{theorem}Hall's Mariage Theorem
+
+	Let $G(A, B, E)$ be a bipartite graph. The graph has a matching that saturates $A$, if and only if for any subset $S \subseteq A$, it holds that $|N(S)| \geq |S|$.
+\end{theorem}
+Using Hall's theorem, it suffices to find such a subset $S \in A$ with nieghborhood with smaller cardinality to certifiy that the graph does not admit a perfect matching.
+
+It is easy to see why it holds in the $\impliedby$ direction, since a perfect matching can be seen as an injective map from $A$ to $B$ using the edges of the matching. It is clear that a subset $S$ with smaller neighborhood would not admit such an injective map.
+
+The other direction can be proved by induction over the size of the set $A$. We omit the proof due to its technicalities and refer to the source for further readings.[todo][ref]
+
+Now we move to an algorithmic part of the problem, introducing two more definitions that we will depend on heavily in this report.
 
 \begin{definition}
-Let G be a bipartite graph with vertex sets $V1$ and $V2$ and edge set E. A complete
-matching $M \subset E$ from $V1$ to $V2$ is a set of $m = |V1|$ independent edges in G. In a complete
-matching $M$, each vertex in $V1$ is incident with precisely one edge from $M$.
-For a subset $S \subset V1$, write \newline \newline
-$\Gamma(S) = {v \in V2 : uv \in E for some u \in V1} \subset V2$.  \newline  \newline
-A bipartite graph G with vertex sets $V1$ and $V2$ contains a complete matching
-from V1 to V2 if and only if it satisfies Hall’s condition
-
-$|S| \leq |\Gamma(S)|  for every S \subset V$
+	Let $G(V, E)$ be a given graph and $M$ a fixed matching in the graph, an \textbf{Alternating Path} $P$ in relation to $M$ is a path in $G$ such that for each two consecutive edges in the path exactly one of them belongs to $M$. That means  the path goes alternatively between edges belonging to and not belonging to the matching $M$.
 \end{definition}
 
 \begin{definition}
-In any bipartite graph, the number of edges in a maximum matching equals the number of vertices in a minimum vertex cover.
+	And \textbf{Augmenting path} in a graph $G(V, E)$ in relation to a matching $M$, is an alternating path in relation to $M$ that starts and ends in $M$-free vertices.
 \end{definition}
+It is easy to see, that for a matching $M$ and an $M$-augmenting path $P$, the set $M \Delta E(P)$ is a matching as well and that $|M \Delta E(P)| = |M| + 1$, and that is why it is called augmenting path.
 
-\begin{definition}
-(Alternating paths and cycles) Let G = (V, E) be a graph and let M be a matching in M. A path P is said to be an alternating path with respect to M if and only if among every two consecutive edges along the path, exactly one belongs to M. An alternating cycle C is defined similarly.
+Augmenting paths are very interesting from the algorithm point of view, since finding and augmenting path increases the size of the matching by one.
 
-An augmenting path P with respect to a matching M is an alternating path that starts and ends in unmatched vertices.
+We present now Brege lemma [todo][red], that completes our previous knowledge to a method to find maximum matching in a bipartite graph.
+\begin{lemma}Berge Lemma
 
-\end{definition}
+	Let $M, N$ be two matchings in a graph $G(V, E)$. Assume that $|N| \geq |M|$ and $|N| - |M| = k \in \mathbb{N}$, then the set $M \Delta N$ has at least $|N| - |M|$ vertex-disjoint augmenting paths in relation to $M$.
+\end{lemma}
+\begin{proof}
+	Since each vertex can be incident to at most one edge in a matching, the graph $H(V, N \Delta M)$ has maximum degree at most $2$. Which means its connected components are simple cycles, simple paths and points. Moreover, all such paths and cycles are alternating since no two adjacent edges can correspond to the same matching. Moreover, the graph has no odd cycle since an odd cycle must have to adjacent edges from the same matching and all its even cycles and even simple paths have as many $N$ edges as $M$.
 
-\begin{definition}
+	Hence, the only components with unequal number of edges from both matchings are simple paths with odd length since the begin and end with edge from the same matching. Since $|N| - |M| = k$, there is at least $k$ odd paths in $H$ beginning and ending in $N$ edges. These paths must be $N$-augmenting paths in $G$, since they are alternating and if the endpoints were blocked in $N$, we could have extended the connected component to more edges.
+\end{proof}
+\begin{corollary}
+	A matching $M$ in a graph $G$ is maximum, if and only if $G$ admits no $M$ augmenting paths.
+\end{corollary}
+\begin{proof}
+If $G$ admits an augmenting path, it is ofcourse not maximum since we can compute $M \Delta P$ a greater matching in the graph.
+Now assuming $M$ is not maixmum. Let us fix a maximum matching $N$. Since $|N| > |M|$, the graph $G$ admits at least $|N| - |M|$ vertex disjoint $M$-augmenting paths.
+\end{proof}
 
-Breadth-first search (BFS) is an algorithm for traversing or searching tree or graph data structures. It starts at the tree root (or some arbitrary node of a graph, sometimes referred to as a 'search key'[1]), and explores all of the neighbor nodes at the present depth prior to moving on to the nodes at the next depth level.
-It uses the opposite strategy as depth-first search, which instead explores the highest-depth nodes first before being forced to backtrack and expand shallower nodes.
+Using the prvious proof, we get a method to find maximum matching in bipartite graphs. It is called the \textbf{Hungarian Method} refering to the founders of the method and it iteratively finds augmenting paths in the graph until the graph admits no more augmenting paths and hence the matching is maximum. It runs in $O(N^4)$ in a naive implementation, however we will aim in this section to a $O(\sqrt n \cdot m)$ algorithm by Hopcroft and Kapr using this exact method.
 
-\end{definition}
+Before we go further with the Hungarian method, we would like to introduce a linear time reduction from maximum bipartite matching to max flow problem. This reduction renders any max-flow algorithm into a bipartite algorithm in the same running time. We refer to [todo] for a [todo] algorithm for max flow problem. Using the reduction we get a [todo] algorithm for maximum matching problem as well.
 
-\begin{definition}
+\begin{reduction}
+	Let $G(A, B, E)$ be a given bipartite graph for maximum matching problem. We build the instance $\left(G'(V', E', s, t), \omega\right)$ for max flow, where omega is a capacity function that assign value one to all edges of the graph $G'$, i.e. $\omega:E'\mapsto \mathbb{R}, \omega(e) = 1$ and $s$ and $t$ are two additional vertices in the graph $G'$ that play the role of the source and the sink of the matching.
 
-(Berge 1957) A matching M in a graph G is a maximum matching if and only if G has no Maugmenting path.
+	We define $V' := V \cup \{s, t\}$, and $E' := \{(a, b) : a \in A, (a, b) \in E\} \cup \{ (s, a): a \in A\} \cup \{(b, t): b \in B\}$.
+	Now we claim that $G'$ with capacities $\omega$ admits a flow of size $k \geq 0$ from $s$ to $t$ if and only if the graph $G$ admits a matching of size $k$ as well.
+\end{reduction}
+For graphical explanation of the reduciton consider figure [todo].
+\begin{proof}
+	Let us fix a matching of size $M$ of cardinality $k$ in the graph $G$. We define a funciton $f:E'\mapsto \mathbb{R}$. We show it is a flow function and it assigns a flow of size exactly $k$.  	
 
-\end{definition}
+	For a vertex $a \in A$, we set
+	\begin{equation*}
+		f((s, a)) :=
+		\begin{cases}
+			1& a \text{ is a blocked vertex in } M\\
+			0& Otherwise\\
+		\end{cases}
+	\end{equation*}
+	For a vertex $b \in B$, we set
+	\begin{equation*}
+		f((b, t)) :=
+		\begin{cases}
+			1& b \text{ is a blocked vertex in } M\\
+			0& Otherwise\\
+		\end{cases}
+	\end{equation*}
+	For each edge $\{a, b\} \in E$, we set
+	\begin{equation*}
+		f((a, b)) :=
+		\begin{cases}
+			1& \{a, b\} \in M\\
+			0& Otherwise\\
+		\end{cases}
+	\end{equation*}
+	It is easy to see why $f$ is a flow, since for each vertex in $V$, it has one unit input and one unit output if and only if it is blocked and hence the flow is onserved and never greater than the capacity 1.
 
-\begin{definition}
+	Now since we assign as many ones to edges coming from $s$ as there are blocked $A$ vertices, the value of the flow is $k$ as well.
 
-Let us call a function {\displaystyle y:(S\cup T)\to \mathbb {R} } {\displaystyle y:(S\cup T)\to \mathbb {R} } a potential if {\displaystyle y(i)+y(j)\leq c(i,j)} y(i)+y(j) \leq c(i, j) for each {\displaystyle i\in S,j\in T} i \in S, j \in T. The value of potential {\displaystyle y} y is the sum of the potential over all vertices: {\displaystyle \sum _{v\in S\cup T}y(v)} \sum_{v\in S\cup T} y(v).
+	Now for a given flow function $f$ of value $k$, we build the set $M \subseteq E$, where $M := \{a, b\}, f((a,b)) = 1$. We claim $M$ is a matching of size $k$.
 
-It is easy to see that the cost of each perfect matching is at least the value of each potential: the total cost of the matching is the sum of costs of all edges; the cost of each edge is at least the sum of potentials of its endpoints; since the matching is perfect, each vertex is an endpoint of exactly one edge; hence the total cost is at least the total potential.
+	Each unit of flow leaving $s$ must reach $t$ and hence use and edge in $E$ which gives the size bound.
 
-The Hungarian method finds a perfect matching and a potential such that the matching cost equals the potential value. This proves that both of them are optimal. In fact, the Hungarian method finds a perfect matching of tight edges: an edge {\displaystyle ij} ij is called tight for a potential {\displaystyle y} y if {\displaystyle y(i)+y(j)=c(i,j)} y(i)+y(j) = c(i, j). Let us denote the subgraph of tight edges by {\displaystyle G_{y}} G_y. The cost of a perfect matching in {\displaystyle G_{y}} G_y (if there is one) equals the value of {\displaystyle y} y.
+	Now to prove it is a flow, each vertex in $A$ gets at most one unit of flow from $s$, and due to flow conservation, it can send at most one unit to $B$. For the same reason a $B$ vertex can receive at most one flow unit from $A$ and hence can be matched to at most one vertex.
+\end{proof}
 
-During the algorithm we maintain a potential {\displaystyle y} y and an orientation of {\displaystyle G_{y}} G_y (denoted by {\displaystyle {\overrightarrow {G_{y}}}} \overrightarrow{G_y}) which has the property that the edges oriented from T to S form a matching M. Initially, y is 0 everywhere, and all edges are oriented from S to T (so M is empty). In each step, either we modify y so that its value increases, or modify the orientation to obtain a matching with more edges. We maintain the invariant that all the edges of M are tight. We are done if M is a perfect matching.
+Now we can move to the last subsection of this section, namely Hopcroft Carp implementation of the Hungarian method that runs in $O(\sqrt n \cdot m)$.
 
-In a general step, let {\displaystyle R_{S}\subseteq S} R_S \subseteq S and {\displaystyle R_{T}\subseteq T} R_T \subseteq T be the vertices not covered by M (so {\displaystyle R_{S}} R_{S}consists of the vertices in S with no incoming edge and {\displaystyle R_{T}} R_T consists of the vertices in T with no outgoing edge). Let {\displaystyle Z} Z be the set of vertices reachable in {\displaystyle {\overrightarrow {G_{y}}}} \overrightarrow{G_y} from {\displaystyle R_{S}} R_{S} by a directed path only following edges that are tight. This can be computed by breadth-first search.
+First we need a couple of auxiliary lemmas. We will give an intuition of the proof and refer to the original paper [todo] for a complete proof of the lemmas.
 
-If {\displaystyle R_{T}\cap Z} R_T \cap Z is nonempty, then reverse the orientation of a directed path in {\displaystyle {\overrightarrow {G_{y}}}} \overrightarrow{G_y} from {\displaystyle R_{S}} R_{S} to {\displaystyle R_{T}} R_T. Thus the size of the corresponding matching increases by 1.
+The intuition of the algorithm is to look iteratively for shortest augmenting paths instead of arbitrary ones wich reduce the number of times we need to look for augmenting paths
 
-If {\displaystyle R_{T}\cap Z} R_T \cap Z is empty, then let
+A shortest augmenting path can be found using a BFS in linear time in the graph.
 
-{\displaystyle \Delta :=\min\{c(i,j)-y(i)-y(j):i\in Z\cap S,j\in T\setminus Z\}.} {\displaystyle \Delta :=\min\{c(i,j)-y(i)-y(j):i\in Z\cap S,j\in T\setminus Z\}.}
-{\displaystyle \Delta } \Delta  is positive because there are no tight edges between {\displaystyle Z\cap S} Z \cap S and {\displaystyle T\setminus Z} T \setminus Z. Increase y by {\displaystyle \Delta } \Delta  on the vertices of {\displaystyle Z\cap S} Z \cap S and decrease y by {\displaystyle \Delta } \Delta  on the vertices of {\displaystyle Z\cap T} Z \cap T. The resulting y is still a potential, and although the graph {\displaystyle G_{y}} G_y changes, it still contains M (see the next subsections). We orient the new edges from S to T. By the definition of {\displaystyle \Delta } \Delta  the set Z of vertices reachable from {\displaystyle R_{S}} R_{S} increases (note that the number of tight edges does not necessarily increase).
+In addition, instead of finding one augmenting path in each iteration, we will be aiming for maximal set of vertex-disjoint shortest augmenting paths which is shortest augmenting path packing referred to by \textbf{SAPP}.
 
-We repeat these steps until M is a perfect matching, in which case it gives a minimum cost assignment. The running time of this version of the method is {\displaystyle O(n^{4})} O(n^{4}): M is augmented n times, and in a phase where M is unchanged, there are at most n potential changes (since Z increases every time). The time sufficient for a potential change is {\displaystyle O(n^{2})} O(n^{2}).
+A SAPP can be found in linear time in the graph as we will describe later. We will prove that at most $2\sqrt n + 1$ such packings are enoguh to reach a maximum matching in the graph and hence in running time $O(\sqrt n \cdot m)$ we can find a maximum matching assuming the graph is connected and hence $n \notin \Omega(m)$.
 
-\end{definition}
+We start by showing an algorithm to find a SAPP in linear time in the size of the graph. We omit the proof due to its technicalities and refer to the paper for murther readings. The proof is kinda straightforward from the algorithm.
 
-\begin{definition}
+We start with a BFS from the free vertices in $A$ building the level graph, where vertices in level $i$ have an alternating path of distance $i$ from a free vertex.
 
-The problem of finding the maximum matching can be reduced to maximum flow in the following
-manner. Let G(V, E) be the bipartite graph where V is divided into X and Y . We will construct a
-1
-directed graph G0
-(V
-0
-, E0
-), in which V
-0 which contains all the nodes of V along with a source node
-s and a sink node t. For every edge in E, we add a directed edge in E0
-from X to Y . Finally we
-add a directed edge from s to all nodes in X and from all nodes of Y to t. Each edge is given unit
-capacity.
+We stop our search algorithm when we reach a level with free vertex in the set $B$ after we complete building this level. Free vertices in this level are all $B$-free vertices that can be reached from $A$ free vertices using a shortes augmenting path. Hence we can build a SAPP using DFS from each such vertices using only vertices from previous level in each step until we get back to vertices in level - 0.
 
-Let f be an integral flow of G0 of value k. Then we can make the following observations:
-1. There is no node in X which has more than one outgoing edge where there is a flow.
-2. There is no node in Y which has more than one incoming edge where there is a flow.
-3. The number of edges between X and Y which carry flow is k.
-By these observations, it is straightforward to conclude that the set of edges carrying flow in f
-forms a matching of size k for the graph G. Likewise, given a matching of size k in G, we can
-construct a flow of size k in G0
-. Therefore, solving for maximum flow in G0 gives us a maximum
-matching in G. Note that we used the fact that when edge capacities are integral, Ford-Fulkerson
-produces an integral flow.
-Let us now analyze the running time of this algorithm. Constructing the graph G0
-takes O(n + m)
-time where n = |V | and m = |E|. The running time for the Ford-Fulkerson algorithm is O(m0F)
-where m0
-is the number of edges in E0 and F =
-P
-e∈δ(s)
-(ce). In case of bipartite matching problem,
-F ≤ |V | since there can be only |V | possible edges coming out from source node. So the total
-running time is O(m0n) = O((m + n)n).
-An interesting thing to note is that at any iteration of the algorithm, any s-t path in the residual
-graph will have alternating matched and unmatched edges. Such paths are called alternating
-paths. This property can be used to find maximum matchings even in general graphs.
+Note that since we are only looking for a maximal set (and not maximum), a greedy algorithm using dfs over this set of vertices suffice for our needs.
 
-\end{definition}
+We mark each vertex as visited when we visit it the first time and hence all DFS calls can be done in $O(n + m)$ as well. 
 
-\begin{definition}
+Now we proceed with proving that $O(\sqrt n)$ rounds of SAPP are enough to find a maximum matching.
 
-The Hopcroft-Karp algorithm is an algorithm that takes a bipartite graph G(E,V)G(E,V) and outputs a maximum matching, MM. It runs in worst-case O\big(|E| \sqrt{|V|}\big)O(∣E∣∣V∣) time.
-The Hopcroft-Karp algorithm uses similar techniques as the Hungarian algorithm and Edmonds’ blossom algorithm. Like those algorithms, Hopcroft-Karp repeatedly increases the size of a partial matching by determining augmenting paths. However, Hopcroft-Karp improves upon these other algorithms by finding a maximal set of shortest augmenting paths per iteration, and increases the augmenting path by the maximum flow rather than one by one.
-In practice, researchers have found that Hopcroft-Karp is not as good as the theory suggests—it is often outperformed by breadth-first and depth-first approaches to finding augmenting paths.[1]
+\begin{lemma}
+	Let $M$ be a matching in $G$. Let $P$ be an $M$-shortest augmenting path. Let $P'$ be a shortest augmenting path in $G$ after augmenting $P$. then it holds
+	\[
+		|P'| \geq |P| + 2 |P \cap P'|
+	\]
+\end{lemma}
+\begin{proof}
+	Let $M' = M \Delta P$ and $M'' = M' \Delta P'$. Note that $M'' \Delta M = (M'' \Delta M') \Delta (M' \Delta M) = P' \Delta P$.
 
-he algorithm runs in phases made up of the following steps.[3]
-•	Use a breadth-first search to find augmenting paths. It partitions the vertices of the graph into layers of matching and not matching edges. For the search, start with the free nodes in UU. This forms the first layer of the partitioning. The search finishes at the first layer kk where one or more free nodes in VV are reached.
-•	The free nodes in VV are added to a set called FF. This means that any node added to FF will be the ending node of an augmenting path—and a shortest augmenting path at that since the breadth-first search finds shortest paths.[4]
-•	Once an augmenting path is found, a depth-first search is used to add augmenting paths to current matching MM. At any given layer, the depth-first search will follow edges that lead to an unused node from the previous layer. Paths in the depth-first search tree must be alternating paths (switching between matched and unmatched edges). Once the algorithm finds an augmenting path that uses a node from FF, the depth-first search moves on to the next starting vertex.
-The algorithm terminates when the algorithm can find no more augmenting paths in the breadth-first search step.
+	Since $|M''| = |M| + 2$, there are two vertex disjoint augmenting paths $P_1, P_2$ in $M \Delta M''$ in relation to $M$ using Berge lemma. Since $P$ was shortest augmenting path, it holds that $|P| \leq |P_1|$ and $|P| \leq |P_2|$.
+
+	Hence
+	\begin{align*}
+		|P \Delta P'|&\\
+		=& |M \Delta M''|\\
+		\geq& |P_1 \cup P_2|\\
+		=& |P_1| + |P_2|\\
+		\geq& 2 \cdot |P|\\
+	\end{align*}
+	Note that the inequality in the third line holds since $P_1$ and $P_2$ are in defintion part of the symmetric difference of the two matchings meanwhile the equality in the following line holds because the two paths are vertex disjoint.
+
+	Now using this result it is easy to complete the proof.
+	\begin{align*}
+		&|P \Delta P'| = |P| + |P'| - 2 |P \cup P'| \geq 2 \cdot |P|\\
+		\implies&|P'| \geq |P| + 2|P \cup P'|\\
+	\end{align*}
+
+	
+\end{proof}
 
 
-\end{definition}
+\begin{corollary}
+	The length of shortest augmenting path increases monotonously in a graph after each augmentation.
+\end{corollary}
+
+Now in the following we prove that this length increases strictly after each augmenting of a SAPP.
+
+\begin{lemma}
+	Let $G$ be a given graph and $M$ a matching in $G$, Let $\mathcal{P} =  P_1, \dots P_k$ be a SAPP in the graph. Let in addtion $P$ be a shortest augmenting path in $G$ after augmenting $\mathcal{P}$. Then the length of $P$ is at least greater than $|P_1|$ the length of paths in $\mathcal{P}$.
+\end{lemma}
+\begin{proof}
+	We distinct two cases. In the first case, assume that $P$ is disjoint from all paths in $\mathcal{P}$, if $P$ is not strictly longer that $P_1$, we could have packed it in the packing getting a greater packing and hence our packing is not maximal which is a contradiction. Hence $|P| > |P_1|$.
+
+	For the other case let $P_i \mathcal{P}$ be a path intersecting $P$ for some $i \in [k]$. $P$ is a shortest augmenting path after augmenting paths in $\mathcal{P}$, since the length of shortest augmenting path never decrease, using the previous lemma, we know
+	$$|P| \geq |P_i| + 2 |P \cap P_i|$$  
+	With non empty intersection and hence the length of $P$ is strictly greater as well.
+\end{proof}
+
+Now to the final theorem of the sectoin.
+\begin{theorem}
+	In a graph $G$, $O(\sqrt n)$ phases of finding SAPP and augmenting them is enough to find a maixmum matching in the graph.
+\end{theorem}
+\begin{proof}
+	Let $M$ be the matching after $\sqrt n$ phases. Using the previous lemma we know the length of the shortest augmenting path must be at least $\sqrt n + 1$. Now Let $N$ be a maximum matching in the graph. We want to bound the size oef $|N| - |M|$ and hence the number of augmenting paths we still need to find.
+
+	Using Berge lemma, we know there is in $M$ $|N| - |M|$ vertex disjoint augmenting paths. assuming $|N| - |M| > \sqrt n$, $G$, $G$ has at least $\sqrt n$ vertex disjoint augmenting paths each of length at least $\sqrt n + 1$ which total in more than $\sqrt n * (\sqrt n + 1) > n$ vertices which is impossible. Hence $|N| - |M| \leq \sqrt n$ and hence with at most $\sqrt n$ augmenting paths we reach a maximum matching in the graph. Since each phase finds at least one augmenting path, at most $\sqrt n$ phases suffice as well. In total we have $2 \sqrt n$ phases.
+\end{proof}

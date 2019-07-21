@@ -5,6 +5,8 @@ A \textbf{Matching} $M \subseteq E$ in a graph $G(V, E)$ is a subset of pairwise
 \end{definition}
 In a matching, a vertex incident to a matching edge is called \textbf{blocked} vertex in contrast to a \textbf{free} vertex that is not incident to a matching edge.
 
+We say that a matching $M$ \textbf{saturates} a vertex set $S \subseteq V$, if every vertex in $S$ is incident to an edge in the matching $M$.
+
 \begin{definition}
 A \textbf{Maximal Matching} in a graph is a matching that is not a subset of any other matching in the graph, and hence a matching is maximal if and only if it intersects every single edge in the graph.
 \end{definition}
@@ -19,7 +21,7 @@ A \textbf{Perfect Matching} in a graph of $n$ vertices, where $n$ is a positive 
 \end{definition}
 Note that since each edge is incident to two vertices and no vertex is incident to more that one matching edge, there is no matching of size greater than $\ceil*{ \frac{n}{2}}$ and hence a perfect matching *if it exists* in a graph, is a maximum matching as well.
 
-Note also that all vertices in a perfect matching are blocked vertices.
+Note also that all vertices in a perfect matching are blocked vertices and hence a perfect matching in a graph saturates the vertex set of the graph.
 
 Perfect matching is not unique as well, and the problem of counting perfect matchings in a graph has also been well studied. We refer to [todo] for a reference.
 
