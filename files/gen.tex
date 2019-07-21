@@ -43,8 +43,22 @@ matching is a maximum matching iff there is no augmenting path.It takes Graph $
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.75\textwidth]{img/Edmonds_blossom_contraction}
-	\caption{Bipartite graphs can have cycles, but only of even length}
-	\label{fig:bipartite-even-cycle}
+	\includegraphics[width=0.75\textwidth]{img/Edmonds_augmenting_path.png}
+	\caption{Augmenting a path}
+	\label{fig:augmenting-a-path}
 \end{figure}
+
+\textbf{Finding an augmenting path} The search for an augmenting path uses an auxiliary data structure consisting of a forest F whose individual trees correspond to specific portions of the graph G. In fact, the forest F is the same that would be used to find maximum matchings in bipartite graphs (without need for shrinking blossoms). In each iteration the algorithm either (1) finds an augmenting path (Fig. \ref{fig:augmenting-a-path}), (2) finds a blossom and recurses onto the corresponding contracted graph, or (3) concludes there are no augmenting paths.
+
+\textbf{Finding Blossoms}
+The algorithm traverses the graph starting from an exposed vertex. Computing the set of exposed vertices can be done cheaply by substracting the vertices of $M$ from $G$. Starting from that vertex, it labels it as an outer vertex "o". Then, it alternates the labeling between vertices being inner "i" and outer "o" such that no two adjacent vertices have the same label. If two adjacent vertices are labeled as outer "o" then an odd-length cycle (and therefore a blossom) is found. See Fig. \ref{fig:contracting-a-blossom}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.75\textwidth]{img/Edmonds_blossom_contraction}
+	\caption{Contracting a blossom}
+	\label{fig:contracting-a-blossom}
+\end{figure}
+
+After finding and contracting a blossom, the algorithm is executed recursively on the contracted graph. For general graphs, a straightforward implementation of the maximum matching algorithm of Edmonds runs in $\mathcal{O}(|V|^4)$ time \cite{papadimitriou1982combinatorial}. However, more efficient algorithms like the one from \citet{micali1980v} which runs in$\mathcal{O}(\sqrt{|V|}*|E|)$ are known.
 
