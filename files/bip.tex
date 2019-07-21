@@ -1,0 +1,117 @@
+In this section, we describe a bipartite matching through several formal definitions and at the end an algorithm, that efficiently checks a bipartite graph for the best possible matching. We will begin with some important formal definitions first, which we will use later on in our algorithms:
+
+\begin{definition}
+Let G be a bipartite graph with vertex sets $V1$ and $V2$ and edge set E. A complete
+matching $M \subset E$ from $V1$ to $V2$ is a set of $m = |V1|$ independent edges in G. In a complete
+matching $M$, each vertex in $V1$ is incident with precisely one edge from $M$.
+For a subset $S \subset V1$, write \newline \newline
+$\Gamma(S) = {v \in V2 : uv \in E for some u \in V1} \subset V2$.  \newline  \newline
+A bipartite graph G with vertex sets $V1$ and $V2$ contains a complete matching
+from V1 to V2 if and only if it satisfies Hall’s condition
+
+$|S| \leq |\Gamma(S)|  for every S \subset V$
+\end{definition}
+
+\begin{definition}
+In any bipartite graph, the number of edges in a maximum matching equals the number of vertices in a minimum vertex cover.
+\end{definition}
+
+\begin{definition}
+(Alternating paths and cycles) Let G = (V, E) be a graph and let M be a matching in M. A path P is said to be an alternating path with respect to M if and only if among every two consecutive edges along the path, exactly one belongs to M. An alternating cycle C is defined similarly.
+
+An augmenting path P with respect to a matching M is an alternating path that starts and ends in unmatched vertices.
+
+\end{definition}
+
+\begin{definition}
+
+Breadth-first search (BFS) is an algorithm for traversing or searching tree or graph data structures. It starts at the tree root (or some arbitrary node of a graph, sometimes referred to as a 'search key'[1]), and explores all of the neighbor nodes at the present depth prior to moving on to the nodes at the next depth level.
+It uses the opposite strategy as depth-first search, which instead explores the highest-depth nodes first before being forced to backtrack and expand shallower nodes.
+
+\end{definition}
+
+\begin{definition}
+
+(Berge 1957) A matching M in a graph G is a maximum matching if and only if G has no Maugmenting path.
+
+\end{definition}
+
+\begin{definition}
+
+Let us call a function {\displaystyle y:(S\cup T)\to \mathbb {R} } {\displaystyle y:(S\cup T)\to \mathbb {R} } a potential if {\displaystyle y(i)+y(j)\leq c(i,j)} y(i)+y(j) \leq c(i, j) for each {\displaystyle i\in S,j\in T} i \in S, j \in T. The value of potential {\displaystyle y} y is the sum of the potential over all vertices: {\displaystyle \sum _{v\in S\cup T}y(v)} \sum_{v\in S\cup T} y(v).
+
+It is easy to see that the cost of each perfect matching is at least the value of each potential: the total cost of the matching is the sum of costs of all edges; the cost of each edge is at least the sum of potentials of its endpoints; since the matching is perfect, each vertex is an endpoint of exactly one edge; hence the total cost is at least the total potential.
+
+The Hungarian method finds a perfect matching and a potential such that the matching cost equals the potential value. This proves that both of them are optimal. In fact, the Hungarian method finds a perfect matching of tight edges: an edge {\displaystyle ij} ij is called tight for a potential {\displaystyle y} y if {\displaystyle y(i)+y(j)=c(i,j)} y(i)+y(j) = c(i, j). Let us denote the subgraph of tight edges by {\displaystyle G_{y}} G_y. The cost of a perfect matching in {\displaystyle G_{y}} G_y (if there is one) equals the value of {\displaystyle y} y.
+
+During the algorithm we maintain a potential {\displaystyle y} y and an orientation of {\displaystyle G_{y}} G_y (denoted by {\displaystyle {\overrightarrow {G_{y}}}} \overrightarrow{G_y}) which has the property that the edges oriented from T to S form a matching M. Initially, y is 0 everywhere, and all edges are oriented from S to T (so M is empty). In each step, either we modify y so that its value increases, or modify the orientation to obtain a matching with more edges. We maintain the invariant that all the edges of M are tight. We are done if M is a perfect matching.
+
+In a general step, let {\displaystyle R_{S}\subseteq S} R_S \subseteq S and {\displaystyle R_{T}\subseteq T} R_T \subseteq T be the vertices not covered by M (so {\displaystyle R_{S}} R_{S}consists of the vertices in S with no incoming edge and {\displaystyle R_{T}} R_T consists of the vertices in T with no outgoing edge). Let {\displaystyle Z} Z be the set of vertices reachable in {\displaystyle {\overrightarrow {G_{y}}}} \overrightarrow{G_y} from {\displaystyle R_{S}} R_{S} by a directed path only following edges that are tight. This can be computed by breadth-first search.
+
+If {\displaystyle R_{T}\cap Z} R_T \cap Z is nonempty, then reverse the orientation of a directed path in {\displaystyle {\overrightarrow {G_{y}}}} \overrightarrow{G_y} from {\displaystyle R_{S}} R_{S} to {\displaystyle R_{T}} R_T. Thus the size of the corresponding matching increases by 1.
+
+If {\displaystyle R_{T}\cap Z} R_T \cap Z is empty, then let
+
+{\displaystyle \Delta :=\min\{c(i,j)-y(i)-y(j):i\in Z\cap S,j\in T\setminus Z\}.} {\displaystyle \Delta :=\min\{c(i,j)-y(i)-y(j):i\in Z\cap S,j\in T\setminus Z\}.}
+{\displaystyle \Delta } \Delta  is positive because there are no tight edges between {\displaystyle Z\cap S} Z \cap S and {\displaystyle T\setminus Z} T \setminus Z. Increase y by {\displaystyle \Delta } \Delta  on the vertices of {\displaystyle Z\cap S} Z \cap S and decrease y by {\displaystyle \Delta } \Delta  on the vertices of {\displaystyle Z\cap T} Z \cap T. The resulting y is still a potential, and although the graph {\displaystyle G_{y}} G_y changes, it still contains M (see the next subsections). We orient the new edges from S to T. By the definition of {\displaystyle \Delta } \Delta  the set Z of vertices reachable from {\displaystyle R_{S}} R_{S} increases (note that the number of tight edges does not necessarily increase).
+
+We repeat these steps until M is a perfect matching, in which case it gives a minimum cost assignment. The running time of this version of the method is {\displaystyle O(n^{4})} O(n^{4}): M is augmented n times, and in a phase where M is unchanged, there are at most n potential changes (since Z increases every time). The time sufficient for a potential change is {\displaystyle O(n^{2})} O(n^{2}).
+
+\end{definition}
+
+\begin{definition}
+
+The problem of finding the maximum matching can be reduced to maximum flow in the following
+manner. Let G(V, E) be the bipartite graph where V is divided into X and Y . We will construct a
+1
+directed graph G0
+(V
+0
+, E0
+), in which V
+0 which contains all the nodes of V along with a source node
+s and a sink node t. For every edge in E, we add a directed edge in E0
+from X to Y . Finally we
+add a directed edge from s to all nodes in X and from all nodes of Y to t. Each edge is given unit
+capacity.
+
+Let f be an integral flow of G0 of value k. Then we can make the following observations:
+1. There is no node in X which has more than one outgoing edge where there is a flow.
+2. There is no node in Y which has more than one incoming edge where there is a flow.
+3. The number of edges between X and Y which carry flow is k.
+By these observations, it is straightforward to conclude that the set of edges carrying flow in f
+forms a matching of size k for the graph G. Likewise, given a matching of size k in G, we can
+construct a flow of size k in G0
+. Therefore, solving for maximum flow in G0 gives us a maximum
+matching in G. Note that we used the fact that when edge capacities are integral, Ford-Fulkerson
+produces an integral flow.
+Let us now analyze the running time of this algorithm. Constructing the graph G0
+takes O(n + m)
+time where n = |V | and m = |E|. The running time for the Ford-Fulkerson algorithm is O(m0F)
+where m0
+is the number of edges in E0 and F =
+P
+e∈δ(s)
+(ce). In case of bipartite matching problem,
+F ≤ |V | since there can be only |V | possible edges coming out from source node. So the total
+running time is O(m0n) = O((m + n)n).
+An interesting thing to note is that at any iteration of the algorithm, any s-t path in the residual
+graph will have alternating matched and unmatched edges. Such paths are called alternating
+paths. This property can be used to find maximum matchings even in general graphs.
+
+\end{definition}
+
+\begin{definition}
+
+The Hopcroft-Karp algorithm is an algorithm that takes a bipartite graph G(E,V)G(E,V) and outputs a maximum matching, MM. It runs in worst-case O\big(|E| \sqrt{|V|}\big)O(∣E∣∣V∣) time.
+The Hopcroft-Karp algorithm uses similar techniques as the Hungarian algorithm and Edmonds’ blossom algorithm. Like those algorithms, Hopcroft-Karp repeatedly increases the size of a partial matching by determining augmenting paths. However, Hopcroft-Karp improves upon these other algorithms by finding a maximal set of shortest augmenting paths per iteration, and increases the augmenting path by the maximum flow rather than one by one.
+In practice, researchers have found that Hopcroft-Karp is not as good as the theory suggests—it is often outperformed by breadth-first and depth-first approaches to finding augmenting paths.[1]
+
+he algorithm runs in phases made up of the following steps.[3]
+•	Use a breadth-first search to find augmenting paths. It partitions the vertices of the graph into layers of matching and not matching edges. For the search, start with the free nodes in UU. This forms the first layer of the partitioning. The search finishes at the first layer kk where one or more free nodes in VV are reached.
+•	The free nodes in VV are added to a set called FF. This means that any node added to FF will be the ending node of an augmenting path—and a shortest augmenting path at that since the breadth-first search finds shortest paths.[4]
+•	Once an augmenting path is found, a depth-first search is used to add augmenting paths to current matching MM. At any given layer, the depth-first search will follow edges that lead to an unused node from the previous layer. Paths in the depth-first search tree must be alternating paths (switching between matched and unmatched edges). Once the algorithm finds an augmenting path that uses a node from FF, the depth-first search moves on to the next starting vertex.
+The algorithm terminates when the algorithm can find no more augmenting paths in the breadth-first search step.
+
+
+\end{definition}
