@@ -2,9 +2,9 @@ In this section we will focus on bipartite graphs, going through some basic defi
 \begin{definition}
 	A \textbf{Vertex Cover} in a graph $G(V, E)$, is a set of vertices $S \subseteq V$, such that any edge in the graph is incident to at least one vertex in the set.
 \end{definition}
-Minimum Vertex Cover is a well known optimization problem and it is known to be an np-hard problem. [todo][ref]
+Minimum Vertex Cover is a well known optimization problem and it is known to be an np-hard problem \cite{karp1972reducibility}.
 
-It is easy to see that the size of vertex cover is an aupper bound to the size of maximum matching since each edge in the matching must have an endpoint in the cover and the edges do not intersect in their endpoints. However, a very basic theorem from Koenig[todo][ref] states that both numbers are equal in bipartite graphs. The proof is constructive that given a maximum matching in a bipartite graph we can build  a vertex cover of the same size. We omit the proof since it is technical and refer to the paper for further reading.
+It is easy to see that the size of vertex cover is an aupper bound to the size of maximum matching since each edge in the matching must have an endpoint in the cover and the edges do not intersect in their endpoints. However, a very basic theorem proposed by König 1931 \cite{konig1931graphen} states that both numbers are equal in bipartite graphs. The proof is constructive that given a maximum matching in a bipartite graph we can build  a vertex cover of the same size. We omit the proof since it is technical and refer to the paper for further reading.
 
 \begin{theorem}Koenigs Theorem
 
@@ -20,7 +20,7 @@ Using Hall's theorem, it suffices to find such a subset $S \in A$ with nieghborh
 
 It is easy to see why it holds in the $\impliedby$ direction, since a perfect matching can be seen as an injective map from $A$ to $B$ using the edges of the matching. It is clear that a subset $S$ with smaller neighborhood would not admit such an injective map.
 
-The other direction can be proved by induction over the size of the set $A$. We omit the proof due to its technicalities and refer to the source for further readings.[todo][ref]
+The other direction can be proved by induction over the size of the set $A$. We omit the proof due to its technicalities and refer to the source for further reading \cite{hall2009representatives}.
 
 Now we move to an algorithmic part of the problem, introducing two more definitions that we will depend on heavily in this report.
 
@@ -35,7 +35,7 @@ It is easy to see, that for a matching $M$ and an $M$-augmenting path $P$, the s
 
 Augmenting paths are very interesting from the algorithm point of view, since finding and augmenting path increases the size of the matching by one.
 
-We present now Brege lemma [todo][red], that completes our previous knowledge to a method to find maximum matching in a bipartite graph.
+We present now Brege lemma \cite{berge1957two}, that completes our previous knowledge to a method to find maximum matching in a bipartite graph.
 \begin{lemma}Berge Lemma
 
 	Let $M, N$ be two matchings in a graph $G(V, E)$. Assume that $|N| \geq |M|$ and $|N| - |M| = k \in \mathbb{N}$, then the set $M \Delta N$ has at least $|N| - |M|$ vertex-disjoint augmenting paths in relation to $M$.
@@ -55,7 +55,9 @@ Now assuming $M$ is not maixmum. Let us fix a maximum matching $N$. Since $|N| >
 
 Using the prvious proof, we get a method to find maximum matching in bipartite graphs. It is called the \textbf{Hungarian Method} refering to the founders of the method and it iteratively finds augmenting paths in the graph until the graph admits no more augmenting paths and hence the matching is maximum. It runs in $O(N^4)$ in a naive implementation, however we will aim in this section to a $O(\sqrt n \cdot m)$ algorithm by Hopcroft and Kapr using this exact method.
 
-Before we go further with the Hungarian method, we would like to introduce a linear time reduction from maximum bipartite matching to max flow problem. This reduction renders any max-flow algorithm into a bipartite algorithm in the same running time. We refer to [todo] for a [todo] algorithm for max flow problem. Using the reduction we get a [todo] algorithm for maximum matching problem as well.
+Before we go further with the Hungarian method, we would like to introduce a linear time reduction from maximum bipartite matching to max flow problem. This reduction renders any max-flow algorithm into a bipartite algorithm in the same running time. We refer to \cite{orlin2013max} for an $O(n\cdot m)$ algorithm for maximum flow problem. Using the reduction we get an algorithm for maximum matching problem in the same running time as well. 
+
+As we shall see in the reduction, the size of the flow in the new instance is equal to the size of matching in the original instance and hence never greater than $n$. That being said, even the less efficient algorithms for maximum flow problems like Ford-Fulkerson's would give exactly the same bound for matching since $O(|f|\cdot m) = O(n \cdot m)$. Hence we can apply the reduction and use such an algorithm for maximum flow getting an $O(n \cdot m)$ algorithm for maximum matching.
 
 \begin{reduction}
 	Let $G(A, B, E)$ be a given bipartite graph for maximum matching problem. We build the instance $\left(G'(V', E', s, t), \omega\right)$ for max flow, where omega is a capacity function that assign value one to all edges of the graph $G'$, i.e. $\omega:E'\mapsto \mathbb{R}, \omega(e) = 1$ and $s$ and $t$ are two additional vertices in the graph $G'$ that play the role of the source and the sink of the matching.
@@ -63,7 +65,7 @@ Before we go further with the Hungarian method, we would like to introduce a lin
 	We define $V' := V \cup \{s, t\}$, and $E' := \{(a, b) : a \in A, (a, b) \in E\} \cup \{ (s, a): a \in A\} \cup \{(b, t): b \in B\}$.
 	Now we claim that $G'$ with capacities $\omega$ admits a flow of size $k \geq 0$ from $s$ to $t$ if and only if the graph $G$ admits a matching of size $k$ as well.
 \end{reduction}
-For graphical explanation of the reduciton consider figure [todo].
+
 \begin{proof}
 	Let us fix a matching of size $M$ of cardinality $k$ in the graph $G$. We define a funciton $f:E'\mapsto \mathbb{R}$. We show it is a flow function and it assigns a flow of size exactly $k$.  	
 
@@ -102,9 +104,9 @@ For graphical explanation of the reduciton consider figure [todo].
 	Now to prove it is a flow, each vertex in $A$ gets at most one unit of flow from $s$, and due to flow conservation, it can send at most one unit to $B$. For the same reason a $B$ vertex can receive at most one flow unit from $A$ and hence can be matched to at most one vertex.
 \end{proof}
 
-Now we can move to the last subsection of this section, namely Hopcroft Carp implementation of the Hungarian method that runs in $O(\sqrt n \cdot m)$.
+Now we can move to the last part of this section, namely Hopcroft and Carp's implementation\cite{hopcroft1973n} of the Hungarian method that runs in $O(\sqrt n \cdot m)$.
 
-First we need a couple of auxiliary lemmas. We will give an intuition of the proof and refer to the original paper [todo] for a complete proof of the lemmas.
+First we need a couple of auxiliary lemmas. We give a brief proof of the lemmas here. Please refer to the original paper for further reading.
 
 The intuition of the algorithm is to look iteratively for shortest augmenting paths instead of arbitrary ones wich reduce the number of times we need to look for augmenting paths
 

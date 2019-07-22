@@ -52,7 +52,7 @@ On the other hand we define a permanent of a matrix as follow
 	perm(A) = \sum\limits_{\pi \in \mathcal{S}_n} \left( \prod\limits_{i \in [n]} a_{i, \pi(i)}  \right)
 \]
 
-Even though permanent and determinant are very similar in their definitions, determinant of a matrix can be found in polynomial time [todo] using Gauss elimination method meanwhile finding the permanent of a matrix is a hard problem [todo].
+Even though permanent and determinant are very similar in their definitions, determinant of a matrix can be found in slightly super quadratic time \cite{aho1974design}, meanwhile finding the permanent of a matrix is a hard problem \cite{valiant1979complexity} and probably does not admit a polynomial algorithm.
 
 Now we begin with the main part of the section. Let $G(A, B, E)$ be a given graph. Let $a_1, \dots, a_n$ be an arbitrary enumeration of elements in $A$ and $b_1, \dots, b_n$ an arbitrary enumeration of elements in $B$. In addition, let $A_G$ be the bipartite matrix of $G$ according to the previous enumerations. 
 
@@ -109,12 +109,12 @@ More interestingly, we can use variables instead of values, defining the matrix 
 		$$Pr\left[\rho(r_1, \dots, r_n) = 0\right] \leq \frac{d}{|S|}$$
 		Where we mean with $u.a.r$ that the assignment is chosen uniformly at random from $S$.
 	\end{lemma}
-	The lemma can easily be proven by showing that $S$ can not have more than $d |S|^{n-1}$ zeros by induction over $n$. However, we omit the proof here and refer to the original proof [todo].
+	The lemma can easily be proven by showing that $S$ can not have more than $d |S|^{n-1}$ zeros by induction over $n$. However, we omit the proof here and refer to the original proof by Schwartz \cite{schwartz1979probabilistic}.
 
 	Now using the previous lemma, we know the determinant has degree at most $n$, and hence choosing $F$ to be $\{0, 1\}$ and setting building the set $S$ of size $2d$ arbitrarily. We choose some random substition from $x$. If the determinant is non-zero, we already know for sure that the graph admits a perfect matching. If the determinant is zero we know with probability one half that the graph admits no matching.
 
 	Repeating the previous algorithm $t$ times and getting zeros every time yields that the graph admits no perfect matching with probability at least $1 - (\frac{1}{2})^t$ and hence for $d(n)$ the time needed to compute determinant of an $n$ by $n$ matrix, with $5 \log n$ repetitions we get an algorithm running in $O(d(n) \log n)$ that either outputs no if the graph admits no perfect matching or with probability at least $1 - frac{1}{n^5}$ answers yes if it admits one.
 
-	Now [todo] show that in time $O(n^\omega)$ we can compute the determinant of a matrix where $\omega$ is the matrix multiplication exponent (the time needed the multiply two matrices) and the best known upper bound is around 2.3.
+	Now as notated previously \cite{aho1974design}, determinants can be computed in sub cubic time, namely in  $O(n^\omega)$ where $\omega$ is the matrix multiplication exponent (the time needed the multiply two matrices) and the best known bound is around 2.3.
 
-	Hence we have proved an $O(n^{\omega} \log(n))$ randomized algorithm to check if a given graph admits a perfect matching which is better than the best known $O(n^{5/2})$ deterministic algorithm by \citet{micali1980v}.
+	Hence we have proved an $O(n^{\omega} \log(n))$ randomized algorithm to check if a given graph admits a perfect matching with hight probability which is better than the best known $O(n^{5/2})$ deterministic algorithm by \cite{micali1980v} in dense matrices.
