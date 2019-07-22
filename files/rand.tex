@@ -111,10 +111,10 @@ More interestingly, we can use variables instead of values, defining the matrix 
 	\end{lemma}
 	The lemma can easily be proven by showing that $S$ can not have more than $d |S|^{n-1}$ zeros by induction over $n$. However, we omit the proof here and refer to the original proof by Schwartz \cite{schwartz1979probabilistic}.
 
-	Now using the previous lemma, we know the determinant has degree at most $n$, and hence choosing $F$ to be $\{0, 1\}$ and setting building the set $S$ of size $2d$ arbitrarily. We choose some random substition from $x$. If the determinant is non-zero, we already know for sure that the graph admits a perfect matching. If the determinant is zero we know with probability one half that the graph admits no matching.
+	Now using the previous lemma, we know the determinant has degree at most $n$, and hence choosing $F$ to be $\{0, 1\}$ and setting building the set $S$ of size $2d$ arbitrarily. We choose some random substitution from $x$. If the determinant is non-zero, we already know for sure that the graph admits a perfect matching. If the determinant is zero we know with probability one half that the graph admits no matching.
 
 	Repeating the previous algorithm $t$ times and getting zeros every time yields that the graph admits no perfect matching with probability at least $1 - (\frac{1}{2})^t$ and hence for $d(n)$ the time needed to compute determinant of an $n$ by $n$ matrix, with $5 \log n$ repetitions we get an algorithm running in $O(d(n) \log n)$ that either outputs no if the graph admits no perfect matching or with probability at least $1 - frac{1}{n^5}$ answers yes if it admits one.
 
 	Now as notated previously \cite{aho1974design}, determinants can be computed in sub cubic time, namely in  $O(n^\omega)$ where $\omega$ is the matrix multiplication exponent (the time needed the multiply two matrices) and the best known bound is around 2.3.
 
-	Hence we have proved an $O(n^{\omega} \log(n))$ randomized algorithm to check if a given graph admits a perfect matching with hight probability which is better than the best known $O(n^{5/2})$ deterministic algorithm by \cite{micali1980v} in dense matrices.
+	Hence we have proved an $O(n^{\omega} \log(n))$ randomized algorithm to check if a given graph admits a perfect matching with high probability which is better than the best known $O(n^{5/2})$ deterministic algorithm by \cite{micali1980v} in dense matrices.
